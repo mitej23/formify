@@ -1,0 +1,32 @@
+.label {
+    color: #A5A0A0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.hide{
+    position: absolute;
+    opacity: 0;
+    z-index: -100;
+    white-space: pre;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+  
+.input{
+    margin-top: 0.125rem;
+    margin-bottom: 1rem;
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    min-width: 100%;
+    padding-bottom: 5px;
+    border: 1px solid #171a24;
+}
+
+.input:focus{
+    outline: none;
+    border-bottom: 1px solid #fff;
+}
+

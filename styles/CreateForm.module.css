@@ -1,0 +1,122 @@
+.container{
+    width: 60vw;
+    margin: 10vh auto;
+}
+
+.title{
+    font-size: 2em;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 2rem;
+}
+
+.label {
+    color: #A5A0A0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.input{
+    margin-top: 0.5rem;
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.input:focus{
+    outline: none;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #fff;
+}
+
+.radioBtnContainer{
+    margin-bottom: 1.75rem;
+}
+
+.radioBtnText{
+    color: #fff;
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-left: 1rem;
+    margin-bottom: 10px;
+}
+
+.questionHeaderContainer{
+    display: flex;
+}
+
+.questionTitle{
+    background: #4A2BC5;
+    background: linear-gradient(to right, #4A2BC5 0%, #B71DCF 15%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.questionAddBtn{
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 7.5px 15px;
+    margin-left: 1.5rem;
+    border-radius: 15px;
+    background: #4A2BC5;
+    background: linear-gradient(to right, #4A2BC5 0%, #B71DCF 65%);
+}
+
+.questionsContainer{
+    min-height: 15rem;
+    width: 100%;
+    margin-top: 1.75rem;
+}
+
+.questionContainer{
+    margin-top: 2rem
+}
+
+.optionsContainer{
+    margin-top: 1rem;
+}
+
+.option {
+    margin-bottom: 7px;
+}
+
+.questionEmptyMessage{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10rem;
+}
+
+.submitBtn{
+    border: none;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding: 7.5px 15px;
+    margin-top: 3rem;
+    border-radius: 4px;
+    background: #4A2BC5;
+    background: linear-gradient(to right, #4A2BC5 0%, #B71DCF 65%);
+}
+
+.blur{
+    filter: blur(2px);
+}
+
+
+@media screen and (max-width: 850px){
+    .container{
+        width: 80vw;        
+    }
+
+    .modal{
+        width: 80vw;
+        max-width: 35rem;
+    }
+
+}
+    
+
+

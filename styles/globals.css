@@ -1,9 +1,19 @@
-html,
-body {
+* {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #171a24;
+}
+
+h1,h2,h3,p,a{
+  color: #fff;
+}
+
+label {
+  color: #A5A0A0;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 a {
@@ -13,4 +23,8 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+button:hover{
+  cursor: pointer;
 }
