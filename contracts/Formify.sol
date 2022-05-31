@@ -3,6 +3,14 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
+interface ERC20 {
+    function balanceOf(address _owner) external view returns (uint256);
+}
+
+interface ERC721 {
+    function balanceOf(address _owner) external view returns (uint256);
+}
+
 contract Formify{
 
     // get forms of respective users
@@ -21,8 +29,13 @@ contract Formify{
         uint8 totalQuestions;
         mapping(address => uint256) respondentToTheirReply;
         FormReply[] replies;
-        bool nftOrToken; // 0 -> nft || 1 -> token
+        bool nftOrToken; // false -> nft || true -> token
     }
+
+    event FormCreated (
+        address indexed _from,
+        uint indexed id
+    );
 
     // create form 
     function createForm(
@@ -38,6 +51,7 @@ contract Formify{
         userForm.formHash = _formHash;
         userForm.totalQuestions = _totalQuestions;
         userForm.nftOrToken = _nftOrToken;
+        emit FormCreated(msg.sender, formsCount);
     }
 
     // get form using id ==> not gated
@@ -52,6 +66,15 @@ contract Formify{
         bool
     ){
         Form storage userForm = usersToTheirForms[_formAddress][_formId];
+        if(userForm.nftOrToken){
+            // check msg.sender has access to token
+            ERC20 token = ERC20(userForm.gatedToken);
+            require(token.balanceOf(msg.sender) > 0,"You don't have access to this token");
+        }else{
+            // check msg.sender has access to nft
+            ERC721 nft = ERC721(userForm.gatedToken);
+            require(nft.balanceOf(msg.sender) > 0,"You don't have access to this nft");
+        }
         require(userForm.respondentToTheirReply[msg.sender] == 0, "You have already submmited your form");
         return (
             userForm.formCreator, 
@@ -63,14 +86,21 @@ contract Formify{
     }
 
     // fill result 
-    function fillForm(
-        address _gatedToken, 
+    function fillForm( 
         uint8[] memory _answers, 
         address _formAddress, 
         uint8 _formId
     ) external{
         Form storage userForm = usersToTheirForms[_formAddress][_formId];
-        require(userForm.gatedToken == _gatedToken, "Access Denied");
+        if(userForm.nftOrToken){
+            // check msg.sender has access to token
+            ERC20 token = ERC20(userForm.gatedToken);
+            require(token.balanceOf(msg.sender) > 0,"You don't have access to this token");
+        }else{
+            // check msg.sender has access to nft
+            ERC721 nft = ERC721(userForm.gatedToken);
+            require(nft.balanceOf(msg.sender) > 0,"You don't have access to this nft");
+        }
         require(userForm.respondentToTheirReply[msg.sender] == 0, "You have already submmited your form");
         uint256 length = userForm.replies.length;
         userForm.respondentToTheirReply[msg.sender] = length + 1;
