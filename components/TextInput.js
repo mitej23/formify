@@ -3,7 +3,6 @@ import { useRef, useEffect } from 'react'
 import styles from "../styles/TextInput.module.css"
 
 const TextInput = ({label,value,setValue, register, name}) => {
-  console.log(label)
   return (
     <>
       <label className={styles.label}>{label}</label>

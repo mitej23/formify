@@ -44,6 +44,8 @@
 
 .questionHeaderContainer{
     display: flex;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .questionTitle{
@@ -53,15 +55,23 @@
     -webkit-text-fill-color: transparent;
 }
 
+.question{
+    width: max-content;
+}
+
 .questionAddBtn{
     border: none;
     color: white;
     font-weight: 600;
     padding: 7.5px 15px;
     margin-left: 1.5rem;
-    border-radius: 15px;
+    border-radius: 20px;
     background: #4A2BC5;
     background: linear-gradient(to right, #4A2BC5 0%, #B71DCF 65%);
+}
+
+.questionAddBtn:hover{
+    cursor: pointer;
 }
 
 .questionsContainer{
@@ -70,8 +80,32 @@
     margin-top: 1.75rem;
 }
 
-.questionContainer{
+.questionContainer{ 
     margin-top: 2rem
+}
+
+.questionTitleContainer{
+    display: flex;
+    align-items: center;
+}
+
+/* hide btn */
+
+.questionContainer .editBtn{
+    display: none;
+}
+
+.questionContainer:hover .editBtn{
+    display: block;
+}
+
+
+.editBtn{
+    margin-left: 2rem;
+}
+
+.editBtn:hover{
+    cursor: pointer;
 }
 
 .optionsContainer{
@@ -86,15 +120,18 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-top: 10rem;
+    height: 15rem;
+    justify-content: center;
+    border: 1px dotted #A5A0A0;
+    border-radius: 5px;
 }
 
 .submitBtn{
     border: none;
     color: white;
-    font-size: 1.125rem;
-    font-weight: 600;
-    padding: 7.5px 15px;
+    font-size: 1.0125rem;
+    font-weight: 700;
+    padding: 9px 18px;
     margin-top: 3rem;
     border-radius: 4px;
     background: #4A2BC5;
@@ -103,6 +140,26 @@
 
 .blur{
     filter: blur(2px);
+}
+
+.connectContainer{
+    position: fixed;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.connectBtn{
+    border: none;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    margin-top: 3rem;
+    border-radius: 4px;
+    background: #4A2BC5;
+    background: linear-gradient(to right, #4A2BC5 0%, #B71DCF 65%);
 }
 
 

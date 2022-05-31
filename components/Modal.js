@@ -20,7 +20,7 @@ const Modal = ({ questions, setQuestions, setModal}) => {
 
   const [mounted, setMounted] = React.useState(false);
 
-  const handleSubmitForm = (data) => {
+  const handleModalForm = (data) => {
     console.log(data)
     const newQuestion = {
         question: data.question,
@@ -41,9 +41,9 @@ const Modal = ({ questions, setQuestions, setModal}) => {
   }, [])
 
   return mounted ? createPortal(
-    <>
-        <div className={styles.overlay} />
-        <form className={styles.modal} onSubmit={handleSubmit(handleSubmitForm)}>
+    <div>
+        <div className={styles.overlay}></div>
+        <form className={styles.modal} onSubmit={handleSubmit(handleModalForm)}>
             <MdOutlineClose className={styles.close} size={24} color="white" onClick={() => setModal(false)}/>
             <h1 className={styles.title}>Add Question</h1>
             <div className={styles.form}>
@@ -76,7 +76,7 @@ const Modal = ({ questions, setQuestions, setModal}) => {
             </div>
             <button className={styles.submitBtn} type="submit">Submit</button>
         </form>
-    </>,
+    </div>,
     document.querySelector('#modal-root')
   ): null;
 }

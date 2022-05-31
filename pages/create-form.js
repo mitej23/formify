@@ -5,42 +5,107 @@ import TextInput from '../components/TextInput';
 import styles from '../styles/CreateForm.module.css';
 import { useForm } from 'react-hook-form';
 import Modal from '../components/Modal';
+import {FiEdit} from 'react-icons/fi'
+//  web3
+import { create } from 'ipfs-http-client'
+import { ethers } from 'ethers'
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+} from 'wagmi'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+
+import { contractAddress } from "../config"
+import Formify from "../artifacts/contracts/Formify.sol/Formify.json"
+
+const client = create('https://ipfs.infura.io:5001/api/v0');
 
 const CreateForm = () => {
+  // authentication
+  const { data: account } = useAccount();
+  const { connect, 
+    connector, 
+    error, 
+    isConnecting, 
+    pendingConnector } = useConnect({
+      connector: new MetaMaskConnector(),
+      onError: (error) => {
+        console.log(error);
+      }
+    })
+  const { disconnect } = useDisconnect()
+
+  // forms
 
   const { register, handleSubmit, errors, reset } = useForm({
     defaultValues: {
-        title: 'Edit-title',
-        description: 'Edit-description',
-        tokenType: 'NFT',
-        gatedToken: '0x0',
+      title: 'Edit-title',
+      description: 'Edit-description',
+      tokenType: 'NFT',
+      gatedToken: '0x0',
     }
   });
 
   const [questions,setQuestions] = React.useState([]);
   const [modal,setModal] = React.useState(false);
+  const [btnLoading, setBtnLoading] = React.useState(false);
 
-
-  useEffect(() => {
-    console.log('create form')
-    // check whether user is logged in
-
-    // if not, then login the user using metamask from context
-
-  },[])  
-
-  const handleSubmitForm = (data) => {
+  const handleSubmitForm = async (data) => {
     if(questions.length == 0){
-        alert("Please add atleast one question");
+       return alert("Please add atleast one question");
     }
-
-    // create ipfs hash of the form
-
-    console.log(data,questions);
+    setBtnLoading(true);
+    saveForm() // ---------- test
+    const file = {
+      data,
+      questions
+    }
+    try {
+      const added = await client.add(JSON.stringify(file));
+      const path = added.path;
+      const token = data.tokenType == "ERC20"? true : false; 
+      saveForm(path, data, token);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
+  const saveForm = async (ipfsPath, data, token) => {
+    if (typeof window.ethereum !== 'undefined') {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const signer = provider.getSigner()
+      const contract = new ethers.Contract(contractAddress, Formify.abi,signer);
+      try {
+        const val = await contract.createForm(
+          ipfsPath,
+          data.gatedToken,
+          questions.length,
+          token
+        );
+        const receipt = await val.wait();
+        console.log(receipt);
+        console.log("address: " + receipt.events[0].args[0] + " id: " + receipt.events[0].args[1])
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    }
+    setBtnLoading(false);
+    reset();
+    setQuestions([]);
+  }
+
+  const connectToMetamask = () => {
+    console.log("connect to metamask");
+    connect(connector)
+  }
+
+
   return (
-    <>
+    account ? (
+      <>
         <form className={`${styles.container} ${modal ? styles.blur : ""}`} onSubmit={handleSubmit(handleSubmitForm)}>
             <h1 className={styles.title}>Create Form</h1>
             <TextInput
@@ -83,7 +148,7 @@ const CreateForm = () => {
             />
             <div className={styles.questionHeaderContainer}>
                 <h2 className={styles.questionTitle}>Questions ( {questions.length} )</h2>
-                <button className={styles.questionAddBtn} onClick={() => setModal(true)}>Add</button>
+                <div className={styles.questionAddBtn} onClick={() => setModal(true)}>Add</div>
             </div>
             <div className={styles.questionsContainer}>
                 {
@@ -91,7 +156,11 @@ const CreateForm = () => {
                         questions.map((q,id) => {
                             return (
                             <div className={styles.questionContainer} key={id}>
-                                <h3>{q.question}</h3>
+                                <div className={styles.questionTitleContainer}>
+                                  <h3 className={styles.question}>{q.question}</h3>
+                                  <FiEdit color='grey' className={styles.editBtn} />
+                                </div>
+                                
                                 <div className={styles.optionsContainer}>
                                     {q.options.map((opt) => {
                                         return (
@@ -111,18 +180,40 @@ const CreateForm = () => {
                             )
                         })
                     ):(
-                        <label className={styles.questionEmptyMessage}>Add a question</label>
+                        <div className={styles.questionEmptyMessage}>
+                          <label>
+                            Add a question
+                          </label>
+                        </div>
                     )
                 }
             </div>  
-            <button className={styles.submitBtn} type="submit">Submit</button> 
+            <button className={styles.submitBtn} type="submit" disabled={btnLoading}>
+              {
+                btnLoading ? "Loading..." : "Submit"
+              }
+            </button> 
         </form>
         {   
-            modal && <Modal setModal={setModal} questions={ques} setQuestions={setQuestions}/>
+            modal && <Modal setModal={setModal} questions={questions} setQuestions={setQuestions}/>
         }
     </>
-    
+    ):
+    (
+      <div className={styles.connectContainer}>
+        <button 
+          className={styles.connectBtn}
+          onClick={connectToMetamask}
+          disabled={isConnecting}
+        >
+          Connect with Metamask
+          {isConnecting &&
+            connector === pendingConnector?.id &&
+            ' (connecting)'}
+        </button>
+      </div>
+    )  
   )
 }
 
-export default CreateForm
+export default CreateForm;
