@@ -3,16 +3,36 @@ const { ethers } = require("hardhat");
 
 describe("Formify", function () {
   it("Should create a form", async function(){
+
+    // Deploy erc20 token
+    const ERC20 = await ethers.getContractFactory("DevToken");
+    const erc20 = await ERC20.deploy();
+    await erc20.deployed();
+
+    const tokenContractAddress = erc20.address;
+
+    // Deploy erc721 nft token
+
+    const ERC721 = await ethers.getContractFactory("GameItem");
+    const erc721 = await ERC721.deploy();
+    await erc721.deployed();
+
+    const nftContractAddress = erc721.address;
+
+    // test token
     const Formify = await ethers.getContractFactory("Formify");
     const form = await Formify.deploy();
     await form.deployed();
-    await form.createForm(
+    const f = await form.createForm(
       "ipfs: form content",
-      "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
+      nftContractAddress,
       8,
       false
     );
 
+    const receipt = await f.wait()
+
+    console.log("address: " + receipt.events[0].args[0] + " id: " + receipt.events[0].args[1])
     let getForm = await form.getForm('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', 1);
 
     expect(getForm[2]).to.equal("ipfs: form content");
