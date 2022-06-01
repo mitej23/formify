@@ -112,10 +112,11 @@ contract Formify{
         address _formAddress, 
         uint8 _formId
     ) external view returns (
+        string memory,
         FormReply[] memory
     ){
         Form storage userForm = usersToTheirForms[_formAddress][_formId];
-        return userForm.replies;
+        return (userForm.formHash, userForm.replies);
     }
 
     
