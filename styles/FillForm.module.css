@@ -9,6 +9,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .title{
@@ -22,6 +25,16 @@
     color: #A5A0A0;
     font-size: 1rem;
     font-weight: 500;
+}
+
+.link{
+    color: #6868ff;
+    text-decoration: underline;
+    margin-top: 0.2rem;
+}
+
+.link:hover{
+    cursor: pointer;
 }
 
 .questionsContainer{
@@ -44,7 +57,13 @@
 }
 
 .option {
-    margin-bottom: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 5px;
+    box-shadow: 3px 3px 6px #14161f, -3px -3px 6px #1a1e29;
 }
 
 .input{
@@ -68,9 +87,17 @@
 .radioBtnText{
     color: #fff;
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: 400;
     margin-left: 1rem;
-    margin-bottom: 10px;
+    background: none;
+}
+
+.responsePercent{
+    color: #fff;
+    font-size: 1.125rem;
+    font-weight: 400;
+    margin-left: 1rem;
+    background: none;
 }
 
 .submitBtn{

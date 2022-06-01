@@ -113,7 +113,16 @@
 }
 
 .option {
-    margin-bottom: 7px;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 5px;
+    box-shadow: 3px 3px 6px #14161f, -3px -3px 6px #1a1e29;
+}
+
+.percent{
+    height: 100%;
+    width: 30%;
+    background-color: #1a1e29;
 }
 
 .questionEmptyMessage{

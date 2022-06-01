@@ -4,18 +4,16 @@ import { useRouter } from 'next/router'
 
 import { useForm } from 'react-hook-form';
 //  web3
-import { create } from 'ipfs-http-client'
 import { ethers } from 'ethers'
 import {
   useAccount,
   useConnect,
   useDisconnect,
-  useEnsAvatar,
-  useEnsName,
 } from 'wagmi'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+
 import { contractAddress } from "../../config"
 import Formify from "../../artifacts/contracts/Formify.sol/Formify.json"
+import Link from 'next/link';
 
 const ipfsURI = 'https://ipfs.io/ipfs/'
 
@@ -33,16 +31,8 @@ const FillForm = () => {
 	const { params = [] } = router.query;
 	// authentication
 	const { data: account } = useAccount();
-	const { connect, 
-		connector, 
-		error, 
-		isConnecting, 
-		pendingConnector } = useConnect({
-			connector: new MetaMaskConnector(),
-			onError: (error) => {
-				console.log(error);
-			}
-		})
+	const { connect, connectors, error, isConnecting, pendingConnector } =
+    useConnect()
 	const { disconnect } = useDisconnect();
 
 	// forms
@@ -65,14 +55,15 @@ const FillForm = () => {
 					console.log(signer)
 					const contract = new ethers.Contract(contractAddress, Formify.abi,signer);
 					try {
-						//const form = await contract.getForm(address, formId);
-						const form = ['0x264C890F87100Af322e95A5AF5d6f3BC3190eBBf', '0x9C7252d3475CE7eb00289C558319F18321b46C47', 'QmbMCQuVNe9zUqHnPFqu4fwkWAAtG3a7fM73WM5w5cqdEu', 2, true];
+						const form = await contract.getForm(address, formId);
+						//const form = ['0x264C890F87100Af322e95A5AF5d6f3BC3190eBBf', '0x9C7252d3475CE7eb00289C558319F18321b46C47', 'QmbMCQuVNe9zUqHnPFqu4fwkWAAtG3a7fM73WM5w5cqdEu', 2, true];
 						setCreatedBy(form[0]);
 						if(form){
 							const ipfsHash = form[2];
 							await fetchQuestions(ipfsHash);
 						}
 					} catch (error) {
+						console.log(error);
 						setLoading(false);
 						setAccess(false);
 						if(error?.reason == "You have already submmited your form"){
@@ -93,9 +84,7 @@ const FillForm = () => {
 	async function fetchQuestions(ipfsHash){
 		const ipfsUrl = `${ipfsURI}${ipfsHash}`;
 		const questions = await fetch(ipfsUrl)
-		console.log(questions)
 		const data = await questions.json();
-		console.log(data);
 		setForm(data);
 		setAccess(true);
 		setLoading(false);
@@ -126,7 +115,7 @@ const FillForm = () => {
         );
 		    const results = await contract.viewResults(params[0], parseInt(params[1]));
 		    console.log(results);
-				setFormSubmitted(true);
+			setFormSubmitted(true);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -143,12 +132,16 @@ const FillForm = () => {
 	if(formSubmitted){
 		return <div className={styles.center}>
 			<label>Form Submitted !</label>
+			<Link href={`/view-results/${params[0]}/${params[1]}`} className={styles.link}>view results</Link> 
 		</div>
 	}
 
 	if(alreadyFilled){
 		return <div className={styles.center}>
 			<label>You have already filled this form !</label>
+			<Link href={`/view-results/${params[0]}/${params[1]}`} className={styles.link}>
+				<p className={styles.link}>view results</p>
+			</Link> 
 		</div>
 	}
 
@@ -164,10 +157,12 @@ const FillForm = () => {
 		</div>
 	}
 
-	console.log(form);
+	// console.log("account", account);
+	// console.log(connector , pendingConnector);
+	// console.log(isConnecting)
 
   return (
-    account ? form &&(
+    account ? form && (
 			<form className={styles.container} onSubmit={handleSubmit(formSubmit)}>
 				<h1 className={styles.title}>{form.data.title}</h1>
 				<label>{form.data.description}</label>
@@ -182,7 +177,7 @@ const FillForm = () => {
                   <div className={styles.questionTitleContainer}>
                     <h3>{q.question}</h3>
 									</div>
-									<div className={styles.optionsContainer}>
+									<div className={styles.optionsContainer}>										
                       {q.options.map((opt,oid) => {
                           return (
                           <div key={opt} className={styles.option}>
@@ -194,6 +189,7 @@ const FillForm = () => {
 																	{...register(	`${qid}`, {required: true})}    
                               /><span className={styles.radioBtnText}>{opt}</span>
                               <br />
+														
                           </div>
                           )
                       })}
@@ -209,17 +205,21 @@ const FillForm = () => {
 			</form>
 		) : (
 			(
-				<div className={styles.connectContainer}>
-					<button 
-						className={styles.connectBtn}
-						onClick={connectToMetamask}
-						disabled={isConnecting}
-					>
-						Connect with Metamask
-						{isConnecting &&
-							connector === pendingConnector?.id &&
-							' (connecting)'}
-					</button>
+				<div className={styles.center}>
+					{connectors.map((connector) => (
+      		  <button
+      		    disabled={!connector.ready}
+							className={styles.submitBtn}
+      		    key={connector.id}
+      		    onClick={() => connect(connector)}
+      		  >
+      		    Connect with {connector.name}
+      		    {!connector.ready && ' (unsupported)'}
+      		    {isConnecting &&
+      		      connector.id === pendingConnector?.id &&
+      		      ' (connecting)'}
+      		  </button>
+      		))}
 				</div>
 			) 
 		)
@@ -227,4 +227,4 @@ const FillForm = () => {
   )
 }
 
-export default FillForm
+export default FillForm;
