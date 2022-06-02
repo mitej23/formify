@@ -119,5 +119,20 @@ contract Formify{
         return (userForm.formHash, userForm.replies);
     }
 
+    // dashboard data
+    function getUserForms() external view returns (
+        string[] memory
+    ){  
+        // get all forms
+        uint8 formsCount = usersToTotalFormsCount[msg.sender];
+        string[] memory formHashes = new string[](formsCount);
+        for(uint8 i = 0; i < formsCount; i++){
+            Form storage userForm = usersToTheirForms[msg.sender][i + 1];
+            formHashes[i] = userForm.formHash;
+        }
+        return formHashes;
+        
+    }
+
     
 }
