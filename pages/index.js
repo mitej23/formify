@@ -6,10 +6,6 @@ import {BsArrowRight } from 'react-icons/bs'
 import Link from 'next/link';
 
 export default function Home() {
-
-  
-
-
   return (
     <div className={styles.container}>
       <Head>
@@ -23,7 +19,7 @@ export default function Home() {
         <div className={styles.homepageContainer}>
           <p className={styles.subTitle}>Onchain. Decentralized. Low gas fees</p>
           <h1 className={styles.title}>Create <span className={styles.gradient}>Token Gated</span> Forms</h1>
-          <Link href={'/create-form'}>
+          <Link href={'/dashboard'}>
             <button className={styles.btn}>Create Form <BsArrowRight className={styles.arrow}/></button>
           </Link>
         </div>

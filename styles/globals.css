@@ -28,3 +28,8 @@ a {
 button:hover{
   cursor: pointer;
 }
+
+.container{
+  width: 60vw;
+  margin: 10vh auto;
+}

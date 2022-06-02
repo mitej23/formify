@@ -81,12 +81,13 @@
 }
 
 .questionContainer{ 
-    margin-top: 2rem
+    margin-top: 2rem;
 }
 
 .questionTitleContainer{
     display: flex;
     align-items: center;
+    margin-bottom: 1.25rem;
 }
 
 /* hide btn */
@@ -116,6 +117,7 @@
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;
     border-radius: 5px;
+    border: 1px solid #212533;
     box-shadow: 3px 3px 6px #14161f, -3px -3px 6px #1a1e29;
 }
 

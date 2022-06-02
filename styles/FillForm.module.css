@@ -63,6 +63,7 @@
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;
     border-radius: 5px;
+    border: 1px solid #212533;
     box-shadow: 3px 3px 6px #14161f, -3px -3px 6px #1a1e29;
 }
 
@@ -87,7 +88,7 @@
 .radioBtnText{
     color: #fff;
     font-size: 1.125rem;
-    font-weight: 400;
+font-weight: 400;
     margin-left: 1rem;
     background: none;
 }

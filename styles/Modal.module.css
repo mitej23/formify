@@ -64,6 +64,16 @@
     background: linear-gradient(to right, #4A2BC5 0%, #B71DCF 65%);
 }
 
+.shareLink{
+    border: 1px solid #2c303d;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.shareLink::-webkit-scrollbar {
+    display: none;
+}
 
 @media screen and (max-width: 850px){
     .modal{

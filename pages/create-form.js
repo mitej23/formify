@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect } from 'react'
+import {useRouter} from 'next/router'
 import TextInput from '../components/TextInput';
 
 import styles from '../styles/CreateForm.module.css';
@@ -24,6 +25,8 @@ import Formify from "../artifacts/contracts/Formify.sol/Formify.json"
 const client = create('https://ipfs.infura.io:5001/api/v0');
 
 const CreateForm = () => {
+
+  const router = useRouter();
   // authentication
   const { data: account } = useAccount();
   const { connect, 
@@ -58,7 +61,6 @@ const CreateForm = () => {
        return alert("Please add atleast one question");
     }
     setBtnLoading(true);
-    saveForm() // ---------- test
     const file = {
       data,
       questions
@@ -85,16 +87,16 @@ const CreateForm = () => {
           questions.length,
           token
         );
-        const receipt = await val.wait();
-        console.log(receipt);
-        console.log("address: " + receipt.events[0].args[0] + " id: " + receipt.events[0].args[1])
+        await val.wait();
+        setBtnLoading(false);
+        reset();
+        setQuestions([]);
+        router.push('/dashboard');
       } catch (error) {
         console.log("Error: ", error);
       }
     }
-    setBtnLoading(false);
-    reset();
-    setQuestions([]);
+
   }
 
   const connectToMetamask = () => {
@@ -157,7 +159,7 @@ const CreateForm = () => {
                             return (
                             <div className={styles.questionContainer} key={id}>
                                 <div className={styles.questionTitleContainer}>
-                                  <h3 className={styles.question}>{q.question}</h3>
+                                  <h2 className={styles.question}>{q.question}</h2>
                                   <FiEdit color='grey' className={styles.editBtn} />
                                 </div>
                                 
