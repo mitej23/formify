@@ -6,7 +6,7 @@ import {MdOutlineClose} from 'react-icons/md'
 import TextInput from './TextInput';
 import { useForm } from 'react-hook-form';
 
-const Modal = ({ questions, setQuestions, setModal}) => {
+const Modal = ({ questions, setQuestions, setModal, editQuestion, setEditQuestion}) => {
 
   const { register, handleSubmit, errors, reset } = useForm({
     defaultValues: {
@@ -22,30 +22,68 @@ const Modal = ({ questions, setQuestions, setModal}) => {
 
   const handleModalForm = (data) => {
     console.log(data)
-    const newQuestion = {
-        question: data.question,
-        options: [
-            data.option1,
-            data.option2,
-            data.option3,
-            data.option4
-        ]
+    if(editQuestion){
+        setQuestions(questions.map(question => {
+            if(question.question == editQuestion.question){
+                return {
+                    ...question,
+                    question: data.question,
+                    options: [
+                        data.option1,
+                        data.option2,
+                        data.option3,
+                        data.option4
+                    ] 
+                }
+            }
+            return question
+        }))
+        setEditQuestion(null);
+    }else{
+        const newQuestion = {
+            question: data.question,
+            options: [
+                data.option1,
+                data.option2,
+                data.option3,
+                data.option4
+            ]
+        }
+        setQuestions([...questions,newQuestion]);
     }
-    setQuestions([...questions,newQuestion]);
+    
     setModal(false);
   }
 
+  const handleModalClose = () => {
+      setModal(false);
+      setEditQuestion(null);
+  }
+
+
   React.useEffect(() => {
     setMounted(true);
-    return () => setMounted(false);
-  }, [])
+    if(mounted && editQuestion){
+        // set default values
+        reset({
+            question: editQuestion.question,
+            option1: editQuestion.options[0],
+            option2: editQuestion.options[1],
+            option3: editQuestion.options[2],
+            option4: editQuestion.options[3],
+        })
+    }
+    return () =>  { 
+        setMounted(false);
+    };
+  }, [editQuestion, mounted, reset, setEditQuestion, setModal])
 
   return mounted ? createPortal(
     <div>
         <div className={styles.overlay}></div>
         <form className={styles.modal} onSubmit={handleSubmit(handleModalForm)}>
-            <MdOutlineClose className={styles.close} size={24} color="white" onClick={() => setModal(false)}/>
-            <h1 className={styles.title}>Add Question</h1>
+            <MdOutlineClose className={styles.close} size={24} color="white" onClick={handleModalClose}/>
+            <h1 className={styles.title}>{editQuestion? "Edit Question":"Add Question"}</h1>
             <div className={styles.form}>
                 <TextInput
                     register={register} 
@@ -74,7 +112,10 @@ const Modal = ({ questions, setQuestions, setModal}) => {
                     name="option4"
                 />
             </div>
+            {editQuestion ? 
+            <button className={styles.submitBtn} type="submit">Edit</button> :
             <button className={styles.submitBtn} type="submit">Submit</button>
+            }
         </form>
     </div>,
     document.querySelector('#modal-root')

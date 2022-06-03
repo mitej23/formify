@@ -87,7 +87,13 @@
 .questionTitleContainer{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.25rem;
+}
+
+.actionContainer{
+    display: flex;
+    align-items: center;
 }
 
 /* hide btn */
