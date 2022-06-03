@@ -71,7 +71,7 @@ const ViewResults = () => {
 					await fetchQuestions(results[0]);
 					// setResults(results);
 					console.log("calculating mock results");
-					const finalResult = calculateResult(mockResults);
+					const finalResult = calculateResult(results[1]);
 					console.log(finalResult)
 					setResults(finalResult);
 				}catch(e){

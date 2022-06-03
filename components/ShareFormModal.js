@@ -22,7 +22,7 @@ const ShareFormModal = ({account,id,setModal}) => {
         <MdOutlineClose className={styles.close} size={24} color="white" onClick={() => setModal(false)}/>
         <h2 className={styles.title}>Share Form</h2>
         <div className={styles.shareLink}>
-          <p>{urlDev}{account.address}/{id}</p>
+          <p>{urlDev}fill-form/{account.address}/{id+1}</p>
         </div>
       </div>
     </>

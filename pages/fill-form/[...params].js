@@ -132,7 +132,9 @@ const FillForm = () => {
 	if(formSubmitted){
 		return <div className={styles.center}>
 			<label>Form Submitted !</label>
-			<Link href={`/view-results/${params[0]}/${params[1]}`} className={styles.link}>view results</Link> 
+			<Link href={`/view-results/${params[0]}/${params[1]}`} className={styles.link}>
+				<p className={styles.link}>view results</p>
+			</Link> 
 		</div>
 	}
 
@@ -157,10 +159,6 @@ const FillForm = () => {
 		</div>
 	}
 
-	// console.log("account", account);
-	// console.log(connector , pendingConnector);
-	// console.log(isConnecting)
-
   return (
     account ? form && (
 			<form className={styles.container} onSubmit={handleSubmit(formSubmit)}>
@@ -181,15 +179,15 @@ const FillForm = () => {
                       {q.options.map((opt,oid) => {
                           return (
                           <div key={opt} className={styles.option}>
-                              <input 
+														<div>
+															<input 
                                   type={'radio'} 
                                   className={styles.input} 
                                   name={oid}
                                   value={oid}
 																	{...register(	`${qid}`, {required: true})}    
                               /><span className={styles.radioBtnText}>{opt}</span>
-                              <br />
-														
+														</div>     
                           </div>
                           )
                       })}
