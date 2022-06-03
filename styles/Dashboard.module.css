@@ -46,6 +46,7 @@
     border-radius: 10px;
     border: 1px solid #212533;
     box-shadow: 3px 3px 6px #14161f, -3px -3px 6px #1a1e29;
+    margin-bottom: 1.5rem;
 }
 
 .icon:hover{
@@ -53,9 +54,18 @@
 }
 
 .viewIcon {
-    margin-right: 1rem;
+    margin-right: 1.5rem;
 }
 
-.viewIcon > path {
-    stroke : white
+.viewIcon:hover{
+    cursor: pointer;
+}
+
+.formActions{
+    display: flex;
+    align-items: center;
+}
+
+.formTitle:hover{
+    cursor: pointer;
 }

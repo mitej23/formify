@@ -87,16 +87,16 @@
 
 .radioBtnText{
     color: #fff;
-    font-size: 1.125rem;
-font-weight: 400;
+    font-size: 1.0125rem;
+    font-weight: 400;
     margin-left: 1rem;
     background: none;
 }
 
 .responsePercent{
     color: #fff;
-    font-size: 1.125rem;
-    font-weight: 400;
+    font-size: 1.0125rem;
+    font-weight: 500;
     margin-left: 1rem;
     background: none;
 }

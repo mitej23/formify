@@ -3,7 +3,7 @@ import styles from "../styles/Dashboard.module.css"
 
 import { useRouter } from 'next/router';
 import {MdShare} from "react-icons/md";
-import {GrView} from "react-icons/gr";
+import {BiPoll} from "react-icons/bi";
 
 import ShareFormModal from '../components/ShareFormModal';
 
@@ -89,6 +89,16 @@ const Dashboard = () => {
     setShareFormId(id);
   }
 
+  const viewResults = (id) => {
+    console.log("viewResults: ", id);
+    router.push(`/view-results/${account.address}/${id+1}`);
+  }
+
+  const fillForm = (id) => {
+    console.log("fill form: ", id);
+    router.push(`/fill-form/${account.address}/${id+1}`);
+  }
+
   if(loading){
 		return <div className={styles.center}>
 			<label>Loading...</label>
@@ -114,15 +124,21 @@ const Dashboard = () => {
                 allForms.map((form, index) => {
                   return (
                     <div className={styles.formContainer} key={index}>
-                      <div className={styles.formTitle}>
+                      <div className={styles.formTitle} onClick={() => fillForm(index)}>
                         <h3>{form.data.title}</h3>
                       </div>
                       <div className={styles.formActions}>
-                        <GrView className={`${styles.viewIcon} icon`} color={'white'} size={18}/>
+                        <BiPoll 
+                          className={`${styles.viewIcon} icon`} 
+                          color={'white'} 
+                          size={20}
+                          onClick={() => viewResults(index)}
+                        />
                         <MdShare 
                           className={styles.icon} 
                           color={'white'}
-                          onClick={() => shareForm(index)}  
+                          onClick={() => shareForm(index)}
+                          isDisabled={shareModal}  
                         />
                       </div>
                     </div>
@@ -144,6 +160,7 @@ const Dashboard = () => {
 						className={styles.submitBtn}
     		    key={connector.id}
     		    onClick={() => connect(connector)}
+            style={{marginBottom: "1rem"}}
     		  >
     		    Connect with {connector.name}
     		    {!connector.ready && ' (unsupported)'}
